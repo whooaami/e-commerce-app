@@ -7,10 +7,11 @@ class ProductSerializer(AbstractSerializer):
     class Meta:
         model = Product
         fields = [
+            'id',
             'name',
             'description',
             'price',
-            'image',
+            # 'image',
             'quantity',
             'created_date', 
             'updated_date',
