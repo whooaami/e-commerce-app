@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/api-module
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    networks:
+      - projectnetwork
+  db:
+    image: postgres:14
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: db
+      PGDATABASE: db
+      PGPASSWORD: ${DB_PASS}
+      PGUSER: ${DB_USER}
+    ports:
+      - 127.0.0.1:${DB_PORT}:5432
+    networks:
+      - projectnetwork
+
+networks:
+  projectnetwork:
+  
+volumes:
+  db_data:
