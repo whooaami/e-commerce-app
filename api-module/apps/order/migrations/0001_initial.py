@@ -9,22 +9,41 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('product', '0001_initial'),
+        ("product", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True)),
-                ('updated_date', models.DateTimeField(auto_now=True)),
-                ('status', models.CharField(choices=[('Pending', 'Pending'), ('Processing', 'Processing'), ('Shipped', 'Shipped'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled')], default='Pending', max_length=20)),
-                ('shipping_address', models.TextField()),
-                ('products', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.product')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True)),
+                ("updated_date", models.DateTimeField(auto_now=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Pending", "Pending"),
+                            ("Processing", "Processing"),
+                            ("Shipped", "Shipped"),
+                            ("Delivered", "Delivered"),
+                            ("Cancelled", "Cancelled"),
+                        ],
+                        default="Pending",
+                        max_length=20,
+                    ),
+                ),
+                ("shipping_address", models.TextField()),
+                (
+                    "products",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.product",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

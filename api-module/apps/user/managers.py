@@ -15,9 +15,7 @@ class UserManager(BaseUserManager, AbstractManager):
         email = self.normalize_email(email)
 
         cleared_extra_fields = {
-            k: v
-            for k, v in extra_fields.items()
-            if hasattr(self.model, k)
+            k: v for k, v in extra_fields.items() if hasattr(self.model, k)
         }
 
         user = self.model(email=email, **cleared_extra_fields)
@@ -26,15 +24,15 @@ class UserManager(BaseUserManager, AbstractManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_staff", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_staff", True)
 
-        if extra_fields.get('is_superuser') is not True:
+        if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)

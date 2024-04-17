@@ -1,43 +1,50 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import (
-    permissions,
-    generics,
-    status
-)
+from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 
 from apps.api.pagination import ProjectPagination
+from apps.product.models import Product
 from apps.wishlist.models import Wishlist
 from apps.wishlist.api.serializers import WishlistSerializer
 
 
-class SavedCompaniesCreate(generics.CreateAPIView):
+class SavedCompaniesCreate(generics.ListCreateAPIView):
     """
     List of saved products.
     Add a company to the saved list.
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = WishlistSerializer
     pagination_class = ProjectPagination
+    queryset = Wishlist.objects.all()
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         user = request.user
-        pk = request.data.get("product_pk")
+        product_ids = request.data.get("products", [])
 
-        # Check if the product is already in the user's saved list
-        if WishlistSerializer.objects.filter(user=user, product_pk=pk).exists():
-            saved_product_destroyer = SavedCompaniesDestroy()
-            return saved_product_destroyer.destroy(request, pk)
+        if not product_ids:
+            return Response(
+                {"error": "At least one product ID must be provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        serializer = WishlistSerializer(
-            data={"user": user.id, "products": pk}
-        )
+        if isinstance(product_ids, int):
+            product_ids = [product_ids]
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"Product added": serializer.data})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        for product_id in product_ids:
+            product = get_object_or_404(Product, id=product_id)
+
+            saved_product = Wishlist.objects.filter(user=user, products=product).first()
+            if saved_product:
+                return Response(
+                    {"message": f"Product {product.name} already saved."},
+                    status=status.HTTP_200_OK,
+                )
+
+            wishlist = Wishlist.objects.create(user=user, products=product)
+
+        return Response({"message": "Products saved."}, status=status.HTTP_201_CREATED)
 
 
 class SavedCompaniesDestroy(generics.DestroyAPIView):
@@ -45,14 +52,29 @@ class SavedCompaniesDestroy(generics.DestroyAPIView):
     Remove the product from the saved list.
     """
 
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def destroy(self, request, pk):
+    def destroy(self, request, *args, **kwargs):
         user = request.user
-        saved_product = get_object_or_404(
-            Wishlist, product_pk=pk, user=user
-        )
-        saved_product.delete()
+
+        product_ids = request.data.get("products", [])
+
+        if not product_ids:
+            return Response(
+                {"error": "At least one product ID must be provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if isinstance(product_ids, int):
+            product_ids = [product_ids]
+
+        for product_id in product_ids:
+            saved_product = get_object_or_404(
+                Wishlist, products__id=product_id, user=user
+            )
+            saved_product.delete()
+
         return Response(
-            f"Product {pk} deleted", status=status.HTTP_204_NO_CONTENT
+            f"Products {product_ids} deleted from saved list",
+            status=status.HTTP_204_NO_CONTENT,
         )

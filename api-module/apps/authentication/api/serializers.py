@@ -12,11 +12,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name', 'last_name', 'username']
+        fields = ["email", "password", "first_name", "last_name", "username"]
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
-    
+
 
 class UserLoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -24,9 +24,9 @@ class UserLoginSerializer(TokenObtainPairSerializer):
 
         refresh = self.get_token(self.user)
 
-        data['user'] = UserSerializer(self.user).data
-        data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token)
+        data["user"] = UserSerializer(self.user).data
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)

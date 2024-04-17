@@ -1,9 +1,6 @@
 from django.urls import path
 
-from apps.wishlist.api.views import (
-    SavedCompaniesCreate,
-    SavedCompaniesDestroy
-)
+from apps.wishlist.api.views import SavedCompaniesCreate, SavedCompaniesDestroy
 
 
 urlpatterns = [

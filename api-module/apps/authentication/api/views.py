@@ -1,7 +1,4 @@
-from rest_framework import (
-    generics,
-    status
-)
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,7 +7,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.authentication.api.serializers import (
     UserRegistrationSerializer,
-    UserLoginSerializer
+    UserLoginSerializer,
 )
 
 
@@ -27,17 +24,20 @@ class UserRegisterView(generics.CreateAPIView):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
-        return Response({
-            "user": serializer.data,
-            "refresh": res["refresh"],
-            "token": res["access"]
-        }, status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "user": serializer.data,
+                "refresh": res["refresh"],
+                "token": res["access"],
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class UserLoginView(generics.CreateAPIView):
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
 
@@ -45,7 +45,7 @@ class UserLoginView(generics.CreateAPIView):
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
             raise InvalidToken(e.args[0])
-        
+
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
@@ -58,5 +58,5 @@ class TokenRefreshView(generics.CreateAPIView, TokenRefreshView):
             serializer.is_valid(raise_exception=True)
         except TokenError as e:
             raise InvalidToken(e.args[0])
-        
+
         return Response(serializer.validated_data, status=status.HTTP_200_OK)

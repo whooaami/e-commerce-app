@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('product', '0001_initial'),
-        ('order', '0001_initial'),
+        ("product", "0001_initial"),
+        ("order", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='order',
-            name='products',
+            model_name="order",
+            name="products",
         ),
         migrations.AddField(
-            model_name='order',
-            name='products',
-            field=models.ManyToManyField(to='product.product'),
+            model_name="order",
+            name="products",
+            field=models.ManyToManyField(to="product.product"),
         ),
     ]

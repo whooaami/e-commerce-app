@@ -6,9 +6,4 @@ class WishlistSerializer(AbstractSerializer):
 
     class Meta:
         model = Wishlist
-        fields = [
-            "user",
-            "products",
-            "created_date",
-            "updated_date"
-        ]
+        fields = ["id", "user", "products", "created_date", "updated_date"]

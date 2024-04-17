@@ -8,14 +8,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user', '0001_initial'),
-        ('wishlist', '0001_initial'),
+        ("user", "0001_initial"),
+        ("wishlist", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='wishlist',
-            field=models.ManyToManyField(related_name='users', to='wishlist.wishlist'),
+            model_name="user",
+            name="wishlist",
+            field=models.ManyToManyField(related_name="users", to="wishlist.wishlist"),
         ),
     ]
