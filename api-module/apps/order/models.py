@@ -13,7 +13,7 @@ class Order(AbstractModel):
         ('Cancelled', 'Cancelled'),
     ]
 
-    products = models.ForeignKey(to='product.Product', on_delete=models.CASCADE)
+    products = models.ManyToManyField(to='product.Product')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     shipping_address = models.TextField()
 
