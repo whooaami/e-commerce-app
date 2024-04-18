@@ -5,3 +5,11 @@ class AbstractListCreateView(generics.ListCreateAPIView):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["updated_date", "created_date"]
     ordering = ["-updated_date"]
+
+
+class BaseAuthenticatedView(generics.GenericAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+class BaseAllowAnyView(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)

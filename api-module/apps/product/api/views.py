@@ -4,36 +4,34 @@ from rest_framework import generics, permissions
 from apps.api.pagination import ProjectPagination
 from apps.product.models import Product, Category
 from apps.product.api.serializers import ProductSerializer, CategorySerializer
+from apps.abstract.views import BaseAuthenticatedView, BaseAllowAnyView
 
 
-class CategoryListView(generics.ListCreateAPIView):
+class CategoryListView(BaseAllowAnyView, generics.ListCreateAPIView):
     """
     Browse to get a list of all product categories or create a new category.
     """
 
-    permission_classes = (permissions.AllowAny,)
     serializer_class = CategorySerializer
     pagination_class = ProjectPagination
     queryset = Category.objects.all()
 
 
-class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CategoryDetailView(BaseAuthenticatedView, generics.RetrieveUpdateDestroyAPIView):
     """
     View to get, update, or delete information about a product category.
     """
 
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CategorySerializer
     pagination_class = ProjectPagination
     queryset = Category.objects.all()
 
 
-class ProductListView(generics.ListCreateAPIView):
+class ProductListView(BaseAuthenticatedView, generics.ListCreateAPIView):
     """
     View to get a list of all products or create a new product.
     """
 
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProductSerializer
     pagination_class = ProjectPagination
 
@@ -46,12 +44,11 @@ class ProductListView(generics.ListCreateAPIView):
         return Product.objects.filter(category=category)
 
 
-class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+class ProductDetailView(BaseAuthenticatedView, generics.RetrieveUpdateDestroyAPIView):
     """
     View to get, update, or delete product information.
     """
 
-    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProductSerializer
     pagination_class = ProjectPagination
     queryset = Product.objects.all()
