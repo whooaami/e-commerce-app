@@ -11,4 +11,4 @@ class Cart(AbstractModel):
     objects = CartManager()
 
     def __str__(self):
-        return f"Cart #{self.pk}"
+        return f"Cart {self.id}"
