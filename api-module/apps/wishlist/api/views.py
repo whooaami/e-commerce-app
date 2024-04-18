@@ -32,17 +32,15 @@ class SavedCompaniesCreate(generics.ListCreateAPIView):
         if isinstance(product_ids, int):
             product_ids = [product_ids]
 
-        for product_id in product_ids:
-            product = get_object_or_404(Product, id=product_id)
+        products = Product.objects.filter(id__in=product_ids)
+        saved_products = Wishlist.objects.filter(user=user, products__in=products)
 
-            saved_product = Wishlist.objects.filter(user=user, products=product).first()
-            if saved_product:
-                return Response(
-                    {"message": f"Product {product.name} already saved."},
-                    status=status.HTTP_200_OK,
-                )
+        unsaved_products = products.exclude(
+            id__in=saved_products.values_list("products", flat=True)
+        )
 
-            wishlist = Wishlist.objects.create(user=user, products=product)
+        for product in unsaved_products:
+            Wishlist.objects.create(user=user, products=product)
 
         return Response({"message": "Products saved."}, status=status.HTTP_201_CREATED)
 
@@ -68,11 +66,9 @@ class SavedCompaniesDestroy(generics.DestroyAPIView):
         if isinstance(product_ids, int):
             product_ids = [product_ids]
 
-        for product_id in product_ids:
-            saved_product = get_object_or_404(
-                Wishlist, products__id=product_id, user=user
-            )
-            saved_product.delete()
+        products = Product.objects.filter(id__in=product_ids)
+
+        Wishlist.objects.filter(user=user, products__in=products).delete()
 
         return Response(
             f"Products {product_ids} deleted from saved list",

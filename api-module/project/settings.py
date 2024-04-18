@@ -37,7 +37,31 @@ DEBUG = env.bool("DEBUG", False)
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0",
+]
+
+CORS_ALLOW_HEADERS = [
+    "Access-Control-Expose-Headers",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin",
+    "Content-Type",
+    "Accept",
+    "Accept-Enconding",
+    "Authorization",
+    "Content-Type",
+    "Origin",
+    "Referer",
+]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.example\.com$",
+]
 
 
 # Application definition

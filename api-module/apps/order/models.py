@@ -13,19 +13,20 @@ class Order(AbstractModel):
         ("Cancelled", "Cancelled"),
     ]
 
-    user = models.ForeignKey(to="user.User", on_delete=models.CASCADE)
-    products = models.ManyToManyField(to="product.Product", through="OrderItem")
+    user = models.ForeignKey(to="user.User", on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
     shipping_address = models.TextField()
 
     objects = OrderManager()
 
     def __str__(self):
-        return f"Order #{self.id}"
+        return f"Order {self.id}"
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, related_name="order_items", on_delete=models.CASCADE
+    )
     product = models.ForeignKey(to="product.Product", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
