@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../components/Layout";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import useSWR from "swr";
 import { fetcher } from "../helpers/axios";
+import Layout from "../components/Layout";
+import BackButton from "../components/BackButton";
 
 function Cart() {
   const { data: cartData, error: cartError } = useSWR(`/cart/`, fetcher);
@@ -24,6 +25,9 @@ function Cart() {
 
   return (
     <Layout>
+      <div className="d-flex align-items-center mb-3">
+        <BackButton />
+      </div>
       <h2 className="text-center mb-4">Shopping Cart</h2>
       {cartData && cartData.length > 0 ? (
         <Row className="justify-content-center">
