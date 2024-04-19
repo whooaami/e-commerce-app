@@ -19,7 +19,7 @@ function Navigationbar() {
   return (
     <Navbar bg="primary" variant="dark">
       <Container>
-        <Navbar.Brand className="fw-bold" href="#home">
+        <Navbar.Brand className="fw-bold" href="/">
           MyShop
         </Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
