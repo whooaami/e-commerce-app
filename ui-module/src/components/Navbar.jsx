@@ -1,9 +1,8 @@
 import React from "react";
-import { randomAvatar } from "../utils";
-
 import { Navbar, Container, Image, NavDropdown, Nav } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
+import { randomAvatar } from "../utils";
 
 function Navigationbar() {
   const navigate = useNavigate();
@@ -37,7 +36,9 @@ function Navigationbar() {
                 />
               }
             >
-              <NavDropdown.Item href="#">Profile</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/profile">
+                Profile
+              </NavDropdown.Item>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
