@@ -1,37 +1,32 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 
-from apps.api.pagination import ProjectPagination
 from apps.cart.models import Cart
 from apps.cart.api.serializers import CartSerializer
 
 
 class CartListView(generics.ListCreateAPIView):
-    """
-    List all carts or create a new cart.
-    """
-
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CartSerializer
-    pagination_class = ProjectPagination
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
     def get_queryset(self):
-        """
-        Optionally restricts the carts to a given user,
-        by filtering against query parameter in the URL.
-        """
-        queryset = Cart.objects.all()
-        user_id = self.request.query_params.get("user_id", None)
-        if user_id is not None:
-            queryset = queryset.filter(user_id=user_id)
-        return queryset
+        user = self.request.user
+        if user.is_authenticated:
+            return Cart.objects.filter(user=user)
+        else:
+            return Cart.objects.none()
 
 
 class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a cart instance.
-    """
-
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CartSerializer
-    pagination_class = ProjectPagination
     queryset = Cart.objects.all()

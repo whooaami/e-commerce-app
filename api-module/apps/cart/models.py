@@ -6,7 +6,7 @@ from apps.cart.managers import CartManager
 
 class Cart(AbstractModel):
     user = models.ForeignKey(to="user.User", on_delete=models.CASCADE)
-    products = models.ManyToManyField(to="product.Product")
+    product = models.ForeignKey(to="product.Product", on_delete=models.CASCADE)
 
     objects = CartManager()
 

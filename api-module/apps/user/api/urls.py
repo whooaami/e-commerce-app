@@ -6,5 +6,5 @@ from apps.user.api.views import UsersListView, UserDetailView
 urlpatterns = [
     # /api/users...
     path("", UsersListView.as_view(), name="api_users_list"),
-    path("<id>/", UserDetailView.as_view(), name="api_user_detail"),
+    path("<int:id>/", UserDetailView.as_view(), name="api_user_detail"),
 ]

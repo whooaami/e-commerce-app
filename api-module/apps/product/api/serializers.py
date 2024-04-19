@@ -11,7 +11,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), required=False
+    )
 
     class Meta:
         model = Product
@@ -28,15 +30,11 @@ class ProductSerializer(serializers.ModelSerializer):
         read_only_fields = ["quantity", "category"]
 
     def create(self, validated_data):
-        category = validated_data.pop("category")
+        category_pk = self.context.get("view").kwargs.get("category_pk")
+        try:
+            category = Category.objects.get(pk=category_pk)
+        except Category.DoesNotExist:
+            raise serializers.ValidationError("Category matching query does not exist.")
+
         product = Product.objects.create(category=category, **validated_data)
         return product
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        if self.context.get("request").user.is_authenticated:
-            saved_products_pk = Wishlist.objects.filter(
-                user=self.context.get("request").user
-            ).values_list("product_id", flat=True)
-            context.update({"saved_products_pk": saved_products_pk})
-        return context
