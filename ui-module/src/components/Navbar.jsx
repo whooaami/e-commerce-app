@@ -3,12 +3,17 @@ import { randomAvatar } from "../utils";
 
 import { Navbar, Container, Image, NavDropdown, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
 
 function Navigationbar() {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("auth");
     navigate("/login/");
+  };
+
+  const handleCartClick = () => {
+    navigate("/cart/");
   };
 
   return (
@@ -19,6 +24,9 @@ function Navigationbar() {
         </Navbar.Brand>
         <Navbar.Collapse className="justify-content-end">
           <Nav>
+            <Nav.Link onClick={handleCartClick}>
+              <FaShoppingCart size={36} />
+            </Nav.Link>
             <NavDropdown
               title={
                 <Image

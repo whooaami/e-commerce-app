@@ -6,6 +6,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import CategoryProducts from "./pages/CategoryProducts";
 import ProductDetail from "./pages/ProductDetail"; 
+import Cart from "./pages/Cart"; 
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/register/" element={<Registration />} />
       <Route path="/category/:category_pk/products" element={<CategoryProducts />} />
       <Route path="/category/:category_pk/products/:pk" element={<ProductDetail />} />
+      <Route path="/cart/" element={<Cart />} />
     </Routes>
   );
 }
