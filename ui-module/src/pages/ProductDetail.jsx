@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import Layout from "../components/Layout";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import useSWR from "swr";
 import { fetcher } from "../helpers/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUser } from "../hooks/user.actions";
 import { getAccessToken } from "../hooks/user.actions";
+import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 function ProductDetail() {
   const { category_pk, pk } = useParams();
@@ -50,11 +52,11 @@ function ProductDetail() {
   };
 
   if (error) {
-    return <div>Error fetching product!</div>;
+    return <Error message="Error fetching product!" />;
   }
 
   if (!responseData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const product = responseData;

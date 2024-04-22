@@ -5,6 +5,8 @@ import { fetcher } from "../helpers/axios";
 import { getUser, getAccessToken } from "../hooks/user.actions";
 import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 function Cart() {
   const { data: cartData, error: cartError } = useSWR(`/cart/`, fetcher);
@@ -58,11 +60,11 @@ function Cart() {
   };
 
   if (cartError) {
-    return <div>Error fetching cart!</div>;
+    return <Error message="Error fetching cart!" />;
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

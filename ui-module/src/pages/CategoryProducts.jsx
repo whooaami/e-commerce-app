@@ -1,27 +1,28 @@
 import React from "react";
-import Layout from "../components/Layout";
 import { Row, Col, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import useSWR from "swr";
 import { fetcher } from "../helpers/axios";
-import { useParams } from "react-router-dom";
+import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 function CategoryProducts() {
   const { category_pk } = useParams();
   const { data: responseData, error } = useSWR(`/category/${category_pk}/products/`, fetcher);
 
   if (error) {
-    return <div>Error fetching products!</div>;
+    return <Error message="Error fetching products!" />;
   }
 
   if (!responseData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!Array.isArray(responseData.results)) {
     console.error("Products data is not an array:", responseData);
-    return <div>Error: Products data is not an array</div>;
+    return <Error message="Error: Products data is not an array" />;
   }
 
   const products = responseData.results;

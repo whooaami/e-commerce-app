@@ -10,6 +10,7 @@ import {
 import { getUser } from "../hooks/user.actions";
 import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
+import Error from "../components/Error";
 import "../pages/css/Profile.css";
 
 function Profile() {
@@ -17,7 +18,7 @@ function Profile() {
 
   if (!user) {
     return (
-      <div>Будь ласка, увійдіть у систему, щоб переглянути цю сторінку.</div>
+      <Error message="Будь ласка, увійдіть у систему, щоб переглянути цю сторінку." />
     );
   }
 
