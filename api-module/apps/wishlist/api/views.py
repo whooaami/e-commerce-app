@@ -1,51 +1,53 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 
-from apps.api.pagination import ProjectPagination
 from apps.product.models import Product
 from apps.wishlist.models import Wishlist
 from apps.wishlist.api.serializers import WishlistSerializer
 
 
-class SavedCompaniesCreate(generics.ListCreateAPIView):
+class SavedProductsList(generics.ListCreateAPIView):
     """
     List of saved products.
-    Add a company to the saved list.
+    Add a product to the saved list.
     """
 
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = WishlistSerializer
-    pagination_class = ProjectPagination
-    queryset = Wishlist.objects.all()
 
-    def post(self, request, *args, **kwargs):
+    def get_queryset(self):
+        user = self.request.user
+        return Wishlist.objects.filter(user=user)
+
+    def create(self, request, *args, **kwargs):
         user = request.user
-        product_ids = request.data.get("products", [])
+        product_id = request.data.get("products")
 
-        if not product_ids:
+        if not product_id:
             return Response(
-                {"error": "At least one product ID must be provided."},
+                {"error": "Product ID must be provided."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if isinstance(product_ids, int):
-            product_ids = [product_ids]
+        product = Product.objects.filter(id=product_id).first()
+        if not product:
+            return Response(
+                {"error": "Product with provided ID does not exist."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        products = Product.objects.filter(id__in=product_ids)
-        saved_products = Wishlist.objects.filter(user=user, products__in=products)
+        if Wishlist.objects.filter(user=user, products=product).exists():
+            return Response(
+                {"message": "Product already saved."},
+                status=status.HTTP_200_OK,
+            )
 
-        unsaved_products = products.exclude(
-            id__in=saved_products.values_list("products", flat=True)
-        )
-
-        for product in unsaved_products:
-            Wishlist.objects.create(user=user, products=product)
-
-        return Response({"message": "Products saved."}, status=status.HTTP_201_CREATED)
+        wishlist_item = Wishlist.objects.create(user=user, products=product)
+        serializer = WishlistSerializer(wishlist_item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class SavedCompaniesDestroy(generics.DestroyAPIView):
+class SavedProductsDestroy(generics.DestroyAPIView):
     """
     Remove the product from the saved list.
     """
@@ -54,23 +56,30 @@ class SavedCompaniesDestroy(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
+        product_id = kwargs.get("product_id")
 
-        product_ids = request.data.get("products", [])
-
-        if not product_ids:
+        if not product_id:
             return Response(
-                {"error": "At least one product ID must be provided."},
+                {"error": "Product ID must be provided."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if isinstance(product_ids, int):
-            product_ids = [product_ids]
+        product = Product.objects.filter(id=product_id).first()
+        if not product:
+            return Response(
+                {"error": "Product with provided ID does not exist."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        products = Product.objects.filter(id__in=product_ids)
+        wishlist_item = Wishlist.objects.filter(user=user, product=product).first()
+        if not wishlist_item:
+            return Response(
+                {"error": "Product not found in the saved list."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        Wishlist.objects.filter(user=user, products__in=products).delete()
-
+        wishlist_item.delete()
         return Response(
-            f"Products {product_ids} deleted from saved list",
+            {"message": "Product removed from the saved list."},
             status=status.HTTP_204_NO_CONTENT,
         )

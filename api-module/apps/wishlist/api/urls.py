@@ -1,18 +1,18 @@
 from django.urls import path
 
-from apps.wishlist.api.views import SavedCompaniesCreate, SavedCompaniesDestroy
+from apps.wishlist.api.views import SavedProductsList, SavedProductsDestroy
 
 
 urlpatterns = [
     # /api/saved-list/...
     path(
         "",
-        SavedCompaniesCreate.as_view(),
+        SavedProductsList.as_view(),
         name="saved_companies_create",
     ),
     path(
-        "<pk>/",
-        SavedCompaniesDestroy.as_view(),
+        "<int:pk>/",
+        SavedProductsDestroy.as_view(),
         name="saved_companies_destroy",
     ),
 ]
