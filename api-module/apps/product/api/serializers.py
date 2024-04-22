@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
 from apps.product.models import Product, Category
-from apps.wishlist.models import Wishlist
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(read_only=True)
+
     class Meta:
         model = Category
-        fields = ["id", "name"]
+        fields = ["id", "name", "image"]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -22,6 +23,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "price",
+            "image",
             "quantity",
             "category",
             "created_date",

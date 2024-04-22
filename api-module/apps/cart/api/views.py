@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
 from apps.cart.models import Cart
-from apps.cart.api.serializers import CartSerializer
+from apps.cart.api.serializers import CartSerializer, CartDetailSerializer
 
 
 class CartListView(generics.ListCreateAPIView):
@@ -28,5 +28,5 @@ class CartListView(generics.ListCreateAPIView):
 
 class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = CartSerializer
+    serializer_class = CartDetailSerializer
     queryset = Cart.objects.all()
