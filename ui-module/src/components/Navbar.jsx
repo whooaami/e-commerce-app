@@ -39,6 +39,9 @@ function Navigationbar() {
               <NavDropdown.Item as={Link} to="/profile">
                 Profile
               </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/saved-list">
+                Wish list
+              </NavDropdown.Item>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>

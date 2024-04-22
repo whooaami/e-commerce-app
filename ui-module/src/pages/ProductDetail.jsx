@@ -51,6 +51,32 @@ function ProductDetail() {
     }
   };
 
+  const handleSaveClick = async () => {
+    try {
+      const url = `http://localhost:8000/api/saved-list/`;
+      console.log("Sending request to:", url);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        body: JSON.stringify({
+          user: getUser().id,
+          products: pk,
+        }),
+      });
+      if (response.ok) {
+        console.log("Product added to saved list successfully");
+        navigate("/saved-list/");
+      } else {
+        throw new Error("Failed to add product to saved list");
+      }
+    } catch (error) {
+      console.error("Error adding product to saved list:", error);
+    }
+  };
+
   if (error) {
     return <Error message="Error fetching product!" />;
   }
@@ -85,7 +111,13 @@ function ProductDetail() {
               >
                 Купити
               </Button>
-              <Button variant="primary">Зберегти</Button>
+              <Button
+                variant="primary"
+                className="me-4"
+                onClick={handleSaveClick}
+              >
+                Зберегти
+              </Button>
             </Card.Body>
           </Card>
         </Col>

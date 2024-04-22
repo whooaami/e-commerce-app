@@ -8,6 +8,7 @@ import CategoryProducts from "./pages/CategoryProducts";
 import ProductDetail from "./pages/ProductDetail"; 
 import Cart from "./pages/Cart"; 
 import Profile from "./pages/Profile"; 
+import WishList from "./pages/WishList";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/category/:category_pk/products" element={<CategoryProducts />} />
       <Route path="/category/:category_pk/products/:pk" element={<ProductDetail />} />
       <Route path="/cart/" element={<Cart />} />
+      <Route path="/saved-list/" element={<WishList />} />
     </Routes>
   );
 }
