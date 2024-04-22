@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import { getUser } from "../hooks/user.actions";
 import Layout from "../components/Layout";
+import BackButton from "../components/BackButton";
 import "../pages/css/Profile.css";
 
 function Profile() {
@@ -22,7 +23,8 @@ function Profile() {
 
   return (
     <Layout>
-      <div className="context px-4">
+      <div className="d-flex align-items-center mb-3">
+        <BackButton />
         <h1 className="text-primary">Profile</h1>
       </div>
       <div className="profile-container">

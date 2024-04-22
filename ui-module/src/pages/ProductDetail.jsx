@@ -6,6 +6,7 @@ import { fetcher } from "../helpers/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUser } from "../hooks/user.actions";
 import { getAccessToken } from "../hooks/user.actions";
+import BackButton from "../components/BackButton";
 
 function ProductDetail() {
   const { category_pk, pk } = useParams();
@@ -18,28 +19,27 @@ function ProductDetail() {
   useEffect(() => {
     const currentUser = getUser();
     if (!currentUser) {
-      navigate("/login"); // Redirect to login page if user is not authenticated
+      navigate("/login");
     }
   }, [navigate]);
 
   const handleBuyClick = async () => {
     try {
-      const url = `http://localhost:8000/api/cart/`; // Оновлено URL для відправки в корзину
+      const url = `http://localhost:8000/api/cart/`;
       console.log("Sending request to:", url);
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getAccessToken()}`, // Замінено localStorage.getItem("auth") на функцію отримання токену доступу
+          Authorization: `Bearer ${getAccessToken()}`,
         },
         body: JSON.stringify({
-          user: getUser().id, // Використано функцію для отримання ідентифікатора користувача
+          user: getUser().id,
           product: pk,
         }),
       });
       if (response.ok) {
         console.log("Product added to cart successfully");
-        // Перенаправлення на сторінку корзини після успішного додавання в корзину
         navigate("/cart/");
       } else {
         throw new Error("Failed to add product to cart");
@@ -61,12 +61,15 @@ function ProductDetail() {
 
   return (
     <Layout>
+      <div className="d-flex align-items-center mb-3">
+        <BackButton />
+      </div>
       <Row className="justify-content-center">
         <Col xs={12} sm={6} md={4} lg={3} className="mb-4">
           <Card>
             <Card.Img
               variant="top"
-              src={`https://via.placeholder.com/300x200?text=${product.name}`}
+              src={product.image}
             />
             <Card.Body>
               <Card.Title>Name: {product.name}</Card.Title>

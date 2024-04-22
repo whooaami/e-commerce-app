@@ -34,7 +34,7 @@ function Cart() {
           {cartData.map((cartItem) => (
             <Col key={cartItem.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
               <Card>
-                <Card.Img variant="top" src={`https://via.placeholder.com/300x200?text=${cartItem.product_info.name}`} />
+                <Card.Img variant="top" src={cartItem.product_info.image} />
                 <Card.Body>
                   <Card.Title>{cartItem.product_info.name}</Card.Title>
                   <Card.Text>Price: {cartItem.product_info.price}</Card.Text>

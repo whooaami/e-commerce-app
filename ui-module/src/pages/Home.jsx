@@ -41,10 +41,7 @@ function Home() {
             <Col key={category.id} xs={6} sm={4} lg={3} className="mb-4">
               <Link to={`/category/${category.id}/products`} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Card>
-                  <Card.Img
-                    variant="top"
-                    src={`https://via.placeholder.com/150?text=${category.name}`}
-                  />
+                  <Card.Img variant="top" src={category.image} />
                   <Card.Body>
                     <Card.Title>{category.name}</Card.Title>
                   </Card.Body>
