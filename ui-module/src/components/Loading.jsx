@@ -5,12 +5,12 @@ import Layout from "../components/Layout";
 const Loading = () => {
   return (
     <Layout>
-        <div className="loading-page">
-            <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
-            </Spinner>
-            <p>Loading...</p>
-        </div>
+      <div className="d-flex justify-content-center align-items-center loading-page">
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+        <p>Loading...</p>
+      </div>
     </Layout>
   );
 };
