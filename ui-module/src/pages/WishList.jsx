@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
-import useSWR from "swr";
+import { Table, Button } from "react-bootstrap";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "../helpers/axios";
+import { getUser, getAccessToken } from "../hooks/user.actions";
 import Layout from "../components/Layout";
 import BackButton from "../components/BackButton";
 import Error from "../components/Error";
@@ -25,6 +26,27 @@ function WishList() {
     return <Loading />;
   }
 
+  const handleDeleteItem = async (id) => {
+    try {
+      const url = `http://localhost:8000/api/saved-list/${id}/`;
+      console.log("Sending request to:", url);
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        body: JSON.stringify({
+          user: getUser().id,
+          products: id,
+        }),
+      });
+      mutate("/saved-list/");
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   return (
     <Layout>
       <div className="d-flex align-items-center mb-3">
@@ -39,6 +61,7 @@ function WishList() {
               <th>Description</th>
               <th>Price</th>
               <th>Image</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -49,6 +72,14 @@ function WishList() {
                 <td>{item.products.price}</td>
                 <td>
                   <img src={`http://localhost:8000${item.products.image}`} alt={item.products.name} style={{ width: "50px", height: "50px" }} />
+                </td>
+                <td>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteItem(item.id)}
+                    >
+                      Delete
+                    </Button>
                 </td>
               </tr>
             ))}

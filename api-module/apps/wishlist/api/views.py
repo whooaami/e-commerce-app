@@ -36,7 +36,7 @@ class SavedProductsList(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if Wishlist.objects.filter(user=user, products=product).exists():
+        if Wishlist.objects.filter(user=user, id=product_id).exists():
             return Response(
                 {"message": "Product already saved."},
                 status=status.HTTP_200_OK,
@@ -56,30 +56,23 @@ class SavedProductsDestroy(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
-        product_id = kwargs.get("product_id")
+        wishlist_item_id = kwargs.get("pk")  # Отримати ідентифікатор запису списку бажань з URL-адреси
 
-        if not product_id:
+        if not wishlist_item_id:
             return Response(
-                {"error": "Product ID must be provided."},
+                {"error": "Wishlist item ID must be provided."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        product = Product.objects.filter(id=product_id).first()
-        if not product:
-            return Response(
-                {"error": "Product with provided ID does not exist."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        wishlist_item = Wishlist.objects.filter(user=user, product=product).first()
+        wishlist_item = Wishlist.objects.filter(id=wishlist_item_id, user=user).first()
         if not wishlist_item:
             return Response(
-                {"error": "Product not found in the saved list."},
+                {"error": "Wishlist item not found."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         wishlist_item.delete()
         return Response(
-            {"message": "Product removed from the saved list."},
+            {"message": "Wishlist item removed from the saved list."},
             status=status.HTTP_204_NO_CONTENT,
         )

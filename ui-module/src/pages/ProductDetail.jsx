@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import useSWR from "swr";
 import { fetcher } from "../helpers/axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getUser } from "../hooks/user.actions";
 import { getAccessToken } from "../hooks/user.actions";
 import Layout from "../components/Layout";
@@ -10,7 +12,9 @@ import BackButton from "../components/BackButton";
 import Error from "../components/Error";
 import Loading from "../components/Loading";
 
+
 function ProductDetail() {
+  
   const { category_pk, pk } = useParams();
   const navigate = useNavigate();
   const { data: responseData, error } = useSWR(
@@ -42,6 +46,7 @@ function ProductDetail() {
       });
       if (response.ok) {
         console.log("Product added to cart successfully");
+        toast.success('Product added to cart successfully');
         navigate("/cart/");
       } else {
         throw new Error("Failed to add product to cart");
@@ -68,7 +73,7 @@ function ProductDetail() {
       });
       if (response.ok) {
         console.log("Product added to saved list successfully");
-        navigate("/saved-list/");
+        toast.success('Product added to saved list successfully');
       } else {
         throw new Error("Failed to add product to saved list");
       }
