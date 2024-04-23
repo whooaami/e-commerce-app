@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Table, Button, Form } from "react-bootstrap";
 import { fetcher } from "../helpers/axios";
 import { getAccessToken } from "../hooks/user.actions";
@@ -150,6 +151,11 @@ function Order() {
               </div>
             </div>
           ))}
+          <div className="text-center mt-5">
+            <Link to="/order/confirm/" className="btn btn-success">
+              Confirm order
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="text-center mt-5">

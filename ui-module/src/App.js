@@ -10,6 +10,7 @@ import Cart from "./pages/Cart";
 import Profile from "./pages/Profile"; 
 import WishList from "./pages/WishList";
 import Order from "./pages/Order";
+import OrderConfirm from "./pages/OrderConfirm";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route path="/cart/" element={<Cart />} />
       <Route path="/saved-list/" element={<WishList />} />
       <Route path="/order/" element={<Order />} />
+      <Route path="/order/confirm/" element={<OrderConfirm />} />
     </Routes>
   );
 }
