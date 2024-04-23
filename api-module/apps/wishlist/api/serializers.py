@@ -15,5 +15,5 @@ class WishlistSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         product_data = ProductSerializer(instance.products).data
-        representation['products'] = product_data
+        representation["products"] = product_data
         return representation

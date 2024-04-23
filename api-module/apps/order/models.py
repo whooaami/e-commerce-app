@@ -15,7 +15,7 @@ class Order(AbstractModel):
 
     user = models.ForeignKey(to="user.User", on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
-    shipping_address = models.TextField()
+    shipping_address = models.TextField(blank=True, null=True)
 
     objects = OrderManager()
 

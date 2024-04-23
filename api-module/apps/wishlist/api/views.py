@@ -56,7 +56,9 @@ class SavedProductsDestroy(generics.DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
-        wishlist_item_id = kwargs.get("pk")  # Отримати ідентифікатор запису списку бажань з URL-адреси
+        wishlist_item_id = kwargs.get(
+            "pk"
+        )  # Отримати ідентифікатор запису списку бажань з URL-адреси
 
         if not wishlist_item_id:
             return Response(
