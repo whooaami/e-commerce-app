@@ -20,12 +20,12 @@ function CategoryProducts() {
     return <Loading />;
   }
 
-  if (!Array.isArray(responseData.results)) {
+  if (!Array.isArray(responseData)) {
     console.error("Products data is not an array:", responseData);
     return <Error message="Error: Products data is not an array" />;
   }
 
-  const products = responseData.results;
+  const products = responseData;
 
   return (
     <Layout>

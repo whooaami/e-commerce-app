@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 
-from apps.api.pagination import ProjectPagination
 from apps.product.models import Product, Category
 from apps.product.api.serializers import ProductSerializer, CategorySerializer
 
@@ -13,7 +12,6 @@ class CategoryListView(generics.ListCreateAPIView):
 
     permission_classes = (permissions.AllowAny,)
     serializer_class = CategorySerializer
-    pagination_class = ProjectPagination
     queryset = Category.objects.all()
 
 
@@ -24,7 +22,6 @@ class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CategorySerializer
-    pagination_class = ProjectPagination
     queryset = Category.objects.all()
 
 
@@ -35,7 +32,6 @@ class ProductListView(generics.ListCreateAPIView):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProductSerializer
-    pagination_class = ProjectPagination
 
     def get_queryset(self):
         """
@@ -53,5 +49,4 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProductSerializer
-    pagination_class = ProjectPagination
     queryset = Product.objects.all()

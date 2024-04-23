@@ -18,7 +18,7 @@ function Home() {
     return <Loading />;
   }
 
-  if (!Array.isArray(categories.results)) {
+  if (!Array.isArray(categories)) {
     console.error("Categories data is not an array:", categories);
     return <Error message="Error: Categories data is not an array" />;
   }
@@ -31,7 +31,7 @@ function Home() {
     return chunkedArr;
   };
 
-  const chunkedCategories = chunkArray(categories.results, 3);
+  const chunkedCategories = chunkArray(categories, 3);
 
   return (
     <Layout>
