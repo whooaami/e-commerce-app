@@ -114,14 +114,14 @@ function ProductDetail() {
                 className="me-4"
                 onClick={handleBuyClick}
               >
-                Купити
+                Buy
               </Button>
               <Button
                 variant="primary"
                 className="me-4"
                 onClick={handleSaveClick}
               >
-                Зберегти
+                Save
               </Button>
             </Card.Body>
           </Card>

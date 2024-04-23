@@ -9,6 +9,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart"; 
 import Profile from "./pages/Profile"; 
 import WishList from "./pages/WishList";
+import Order from "./pages/Order";
 
 function App() {
   return (
@@ -24,10 +25,11 @@ function App() {
       <Route path="/login/" element={<Login />} />
       <Route path="/register/" element={<Registration />} />
       <Route path="/profile/" element={<Profile />} />
-      <Route path="/category/:category_pk/products" element={<CategoryProducts />} />
-      <Route path="/category/:category_pk/products/:pk" element={<ProductDetail />} />
+      <Route path="/category/:category_pk/products/" element={<CategoryProducts />} />
+      <Route path="/category/:category_pk/products/:pk/" element={<ProductDetail />} />
       <Route path="/cart/" element={<Cart />} />
       <Route path="/saved-list/" element={<WishList />} />
+      <Route path="/order/" element={<Order />} />
     </Routes>
   );
 }

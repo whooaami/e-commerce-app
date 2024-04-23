@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Table, Button, Form } from "react-bootstrap";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "../helpers/axios";
@@ -24,7 +25,8 @@ function Cart() {
           cartItem.product_info.price &&
           cartItem.product_info.quantity
         ) {
-          total += cartItem.product_info.price * cartItem.product_info.quantity;
+          total +=
+            cartItem.product_info.price * cartItem.product_info.quantity;
         }
       });
       setTotalPrice(total);
@@ -69,6 +71,51 @@ function Cart() {
       mutate("/cart/");
     } catch (error) {
       console.error("Error updating quantity:", error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      if (!cartData || cartData.length === 0) {
+        console.error("No items in the cart");
+        return;
+      }
+  
+      const orderItems = cartData.map((item) => ({
+        product: {
+          name: item.product_info.name,
+          description: item.product_info.description,
+          price: item.product_info.price,
+          image: item.product_info.image,
+          quantity: item.quantity
+        },
+        quantity: item.quantity,
+      }));
+  
+      const payload = {
+        user: getUser().id,
+        status: "Pending",
+        shipping_address: "",
+        order_items: orderItems,
+      };
+  
+      const url = "http://localhost:8000/api/orders/";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (response.ok) {
+        // Редірект на сторінку підтвердження замовлення або обробка успішного створення замовлення тут
+      } else {
+        console.error("Error creating order:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
     }
   };
 
@@ -142,7 +189,11 @@ function Cart() {
           </Table>
           <div className="text-center mt-4">
             <p>Total Price: {totalPrice.toFixed(2)} грн</p>
-            <Button variant="primary">Proceed to Checkout</Button>
+            <Link to="/order/">
+              <Button variant="primary" onClick={handleCheckout}>
+                Proceed to Checkout
+              </Button>
+            </Link>
           </div>
         </>
       ) : (
