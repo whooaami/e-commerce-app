@@ -25,8 +25,7 @@ function Cart() {
           cartItem.product_info.price &&
           cartItem.product_info.quantity
         ) {
-          total +=
-            cartItem.product_info.price * cartItem.product_info.quantity;
+          total += cartItem.product_info.price * cartItem.product_info.quantity;
         }
       });
       setTotalPrice(total);
@@ -80,25 +79,25 @@ function Cart() {
         console.error("No items in the cart");
         return;
       }
-  
+
       const orderItems = cartData.map((item) => ({
         product: {
           name: item.product_info.name,
           description: item.product_info.description,
           price: item.product_info.price,
           image: item.product_info.image,
-          quantity: item.quantity
+          quantity: item.quantity,
         },
         quantity: item.quantity,
       }));
-  
+
       const payload = {
         user: getUser().id,
         status: "Pending",
         shipping_address: "",
         order_items: orderItems,
       };
-  
+
       const url = "http://localhost:8000/api/orders/";
       const response = await fetch(url, {
         method: "POST",
@@ -108,9 +107,8 @@ function Cart() {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok) {
-        // Редірект на сторінку підтвердження замовлення або обробка успішного створення замовлення тут
       } else {
         console.error("Error creating order:", response.statusText);
       }
@@ -148,7 +146,13 @@ function Cart() {
             <tbody>
               {cartData.map((cartItem) => (
                 <tr key={cartItem.id}>
-                  <td>{cartItem.product_info.name}</td>
+                  <td>
+                    <Link
+                      to={`/category/${cartItem.id}/products/${cartItem.product_info.id}`}
+                    >
+                      {cartItem.product_info.name}
+                    </Link>
+                  </td>
                   <td>
                     <Form.Control
                       type="number"
@@ -169,11 +173,15 @@ function Cart() {
                       ).toFixed(2)}
                   </td>
                   <td>
-                    <img
-                      src={cartItem.product_info.image}
-                      alt={cartItem.product_info.name}
-                      style={{ width: "50px", height: "50px" }}
-                    />
+                    <Link
+                      to={`/category/${cartItem.id}/products/${cartItem.product_info.id}`}
+                    >
+                      <img
+                        src={cartItem.product_info.image}
+                        alt={cartItem.product_info.name}
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    </Link>
                   </td>
                   <td>
                     <Button

@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Table, Button, Form } from "react-bootstrap";
+import { Table } from "react-bootstrap";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { fetcher } from "../helpers/axios";
 import { getAccessToken } from "../hooks/user.actions";
 import Layout from "../components/Layout";
+import BackButton from "../components/BackButton";
 import Loading from "../components/Loading";
 
 function Order() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -28,8 +32,20 @@ function Order() {
     fetchOrders();
   }, []);
 
+  useEffect(() => {
+    if (orders.length > 0) {
+      let total = 0;
+      orders.forEach((order) => {
+        order.order_items.forEach((item) => {
+          total += item.product.price * item.quantity;
+        });
+      });
+      setTotalPrice(total);
+    }
+  }, [orders]);
+
   const handleShippingAddressChange = async (e, orderId) => {
-    const newShippingAddress = e.target.value; // Отримати поточне значення зміни
+    const newShippingAddress = e.target.value;
     try {
       const url = `http://localhost:8000/api/orders/${orderId}/`;
       const response = await fetch(url, {
@@ -39,13 +55,13 @@ function Order() {
           Authorization: `Bearer ${getAccessToken()}`,
         },
         body: JSON.stringify({
-          shipping_address: newShippingAddress, // Використовуємо поточне значення
+          shipping_address: newShippingAddress,
         }),
       });
       if (response.ok) {
         const updatedOrders = orders.map((order) => {
           if (order.id === orderId) {
-            return { ...order, shipping_address: newShippingAddress }; // Використовуємо поточне значення
+            return { ...order, shipping_address: newShippingAddress };
           }
           return order;
         });
@@ -57,8 +73,6 @@ function Order() {
       console.error("Error updating shipping address:", error);
     }
   };
-
-
 
   const handleDeleteOrder = async (orderId) => {
     try {
@@ -73,8 +87,10 @@ function Order() {
       if (response.ok) {
         const updatedOrders = orders.filter((order) => order.id !== orderId);
         setOrders(updatedOrders);
+        toast.success('Order deleted successfully!');
       } else {
         console.error("Error deleting order:", response.statusText);
+        toast.error('Error deleting order!');
       }
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -87,13 +103,16 @@ function Order() {
 
   return (
     <Layout>
+      <div className="d-flex align-items-center mb-3">
+        <BackButton />
+      </div>
       <h2 className="text-center mb-4">Orders</h2>
       {orders && orders.length > 0 ? (
         <div>
           {orders.map((order) => (
             <div key={order.id} className="card mb-3">
               <div className="card-body d-flex justify-content-between align-items-center">
-                <h5 className="card-title mb-0">Order ID: {order.id}</h5>
+                <h5 className="card-title mb-0">Order</h5>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDeleteOrder(order.id)}
@@ -139,7 +158,6 @@ function Order() {
                             alt={item.product.name}
                             style={{ width: "50px", height: "50px" }}
                           />
-                          
                         </td>
                         <td>{item.product.description}</td>
                         <td>{item.product.price}</td>
@@ -152,6 +170,7 @@ function Order() {
             </div>
           ))}
           <div className="text-center mt-5">
+            <p>Total Price: {totalPrice.toFixed(2)} грн</p>
             <Link to="/order/confirm/" className="btn btn-success">
               Confirm order
             </Link>

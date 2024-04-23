@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 import useSWR, { mutate } from "swr";
 import { fetcher } from "../helpers/axios";
@@ -9,7 +10,10 @@ import Error from "../components/Error";
 import Loading from "../components/Loading";
 
 function WishList() {
-  const { data: savedListData, error: savedListError } = useSWR(`/saved-list/`, fetcher);
+  const { data: savedListData, error: savedListError } = useSWR(
+    `/saved-list/`,
+    fetcher
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,19 +71,33 @@ function WishList() {
           <tbody>
             {savedListData.map((item) => (
               <tr key={item.id}>
-                <td>{item.products.name}</td>
+                <td>
+                  <Link
+                    to={`/category/${item.id}/products/${item.products.id}`}
+                  >
+                    {item.products.name}
+                  </Link>
+                </td>
                 <td>{item.products.description}</td>
                 <td>{item.products.price}</td>
                 <td>
-                  <img src={`http://localhost:8000${item.products.image}`} alt={item.products.name} style={{ width: "50px", height: "50px" }} />
+                  <Link
+                    to={`/category/${item.id}/products/${item.products.id}`}
+                  >
+                    <img
+                      src={`http://localhost:8000${item.products.image}`}
+                      alt={item.products.name}
+                      style={{ width: "50px", height: "50px" }}
+                    />
+                  </Link>
                 </td>
                 <td>
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDeleteItem(item.id)}
-                    >
-                      Delete
-                    </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
